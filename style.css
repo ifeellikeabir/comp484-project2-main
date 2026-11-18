@@ -170,5 +170,60 @@
     padding: 15px 20px;
     font-size: 16px;
 }
+/* ABIR-X Futuristic Robotic Tail */
 
+.robot-wrapper {
+  position: relative;
+  display: inline-block;
+}
 
+.robot-tail {
+  position: absolute;
+ width: 150px;
+height: 18px;
+right: -65px;
+bottom: 28%;
+z-index: 0;
+
+  background: repeating-linear-gradient(
+    90deg,
+    #52677a 0px,
+    #b8c9d8 13px,
+    #00d9ff 16px,
+    #263746 21px
+  );
+
+  border: 2px solid #00d9ff;
+  border-radius: 50px;
+  box-shadow: 0 0 15px #00d9ff;
+
+  transform-origin: left center;
+  animation: tailWag 2s ease-in-out infinite;
+  z-index: 0;
+}
+
+.robot-wrapper .pet-image {
+  position: relative;
+  z-index: 1;
+}
+
+.tail-tip {
+  position: absolute;
+  right: -12px;
+  top: -7px;
+  width: 25px;
+  height: 32px;
+  background: #00d9ff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00d9ff;
+}
+
+@keyframes tailWag {
+  0%, 100% {
+    transform: rotate(-45deg);
+  }
+
+  50% {
+    transform: rotate(-60deg);
+  }
+}
