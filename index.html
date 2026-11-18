@@ -1,52 +1,403 @@
+
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>ABIR-X | Cyber Companion</title>
-    <meta name="description" content="A cool thing made with Glitch">
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="script.js" defer></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <header>
-    <h1>ABIR-X | Cyber Companion</h1>
-    </header>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abir-X Giga Pet</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <main>
-      <section class="pet-image-container">
-         <!-- Replace pet image with your own pet image -->
-        <img class="pet-image" src="abir-x.png" alt="ABIR-X Robot">
-      </section>
-      <section class="dashboard">
-        <div>Name: <strong><span class="name"></span></strong></div>
-        <div>Weight: <strong><span class="weight"></span> pounds</strong></div>
-        <div>Happiness: <strong><span class="happiness"></span> tail wags (per min)</strong></div>
-        <div class="button-container">
-          <button class="treat-button">
-            Treat
-          </button>
-          <button class="play-button">
-            Play
-          </button>
-          <button class="exercise-button">
-            Exercise
-          </button>
-          <button class="sleep-button">
-  Sleep Mode
-</button>
-        </div>
-        <div class="pet-message">
-  <p id="robot-message">🤖 ABIR-X is online! Ready for action!</p>
-</div>
-      </section>
-    </main>
+<style>
+* { box-sizing: border-box; }
 
-    <!-- Your web-app is https, so your scripts need to be too -->
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
-            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
-            crossorigin="anonymous"></script>
-  </body>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(#f7dfb1, #fff8ed);
+  color: #26384c;
+}
+
+.container {
+  max-width: 650px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 42px;
+  text-align: center;
+  margin: 5px 0 12px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 19px;
+  color: #617c98;
+  margin-bottom: 30px;
+}
+
+.pet-card {
+  background: #fffaf2;
+  border: 5px solid white;
+  border-radius: 35px;
+  padding: 28px;
+  box-shadow: 0 10px 30px #0001;
+}
+
+.pet-display {
+  background: linear-gradient(#bce9ff, #e3f7ff);
+  border-radius: 35px;
+  padding: 25px 10px;
+  text-align: center;
+}
+
+.stage {
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#monkey {
+  width: 300px;
+  max-width: 100%;
+  overflow: visible;
+  transition: transform .4s;
+}
+
+#belly { transition: rx .4s, ry .4s; }
+
+.tail { transform-origin: 167px 160px; }
+
+.wag .tail {
+  animation: wag .25s infinite alternate;
+}
+
+.jump { animation: jump .5s 3; }
+
+.sleeping {
+  transform: rotate(75deg) translate(20px, 30px);
+}
+
+@keyframes wag {
+  from { transform: rotate(-15deg); }
+  to { transform: rotate(18deg); }
+}
+
+@keyframes jump {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-45px); }
+}
+
+.pet-message {
+  font-size: 19px;
+  font-weight: bold;
+  color: #32658d;
+  margin-top: 15px;
+}
+
+.stats { margin: 35px 0; }
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0;
+  border-bottom: 1px solid #d5d5d5;
+  font-size: 19px;
+}
+
+.stat-row span { color: #6b7f96; }
+
+.stat-row strong { text-align: right; }
+
+#action-message {
+  background: #fff0e9;
+  border-left: 6px solid #ff8d73;
+  padding: 18px;
+  border-radius: 12px;
+  color: #875246;
+  font-size: 17px;
+  margin-bottom: 25px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+button {
+  width: 100%;
+  padding: 18px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 16px;
+  background: #4f94c9;
+  color: white;
+  box-shadow: 0 6px #2e6288;
+  cursor: pointer;
+}
+
+button:hover { background: #397fb4; }
+
+button:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px #2e6288;
+}
+
+#sleep { background: #8970b7; }
+
+@media (max-width: 480px) {
+  .container { padding: 12px; margin: 12px auto; }
+  .pet-card { padding: 15px; }
+  h1 { font-size: 32px; }
+  .stage { height: 300px; }
+  #monkey { width: 250px; }
+}
+</style>
+</head>
+
+<body>
+<main class="container">
+  <h1>Abir-X Giga Pet</h1>
+  <p class="subtitle">
+    Take care of Abir-X and keep his tail wagging!
+  </p>
+
+  <section class="pet-card">
+    <div class="pet-display">
+      <div class="stage">
+        <svg id="monkey" viewBox="0 0 300 300"
+             xmlns="http://www.w3.org/2000/svg">
+
+          <!-- Tail behind monkey -->
+          <g class="tail">
+            <path d="M165 160 C235 135 280 175 265 225
+                     C253 265 205 249 222 220"
+              fill="none" stroke="#75401f"
+              stroke-width="19" stroke-linecap="round"/>
+          </g>
+
+          <!-- Feet -->
+          <ellipse cx="112" cy="248" rx="25" ry="33" fill="#75401f"/>
+          <ellipse cx="177" cy="248" rx="25" ry="33" fill="#75401f"/>
+
+          <!-- Arms -->
+          <ellipse cx="80" cy="175" rx="23" ry="65"
+            transform="rotate(18 80 175)" fill="#75401f"/>
+          <ellipse cx="212" cy="175" rx="23" ry="65"
+            transform="rotate(-18 212 175)" fill="#75401f"/>
+
+          <!-- Body -->
+          <ellipse cx="145" cy="190" rx="69" ry="76" fill="#75401f"/>
+          <ellipse id="belly" cx="145" cy="198"
+            rx="45" ry="51" fill="#dca779"/>
+
+          <!-- Ears -->
+          <circle cx="76" cy="82" r="29" fill="#75401f"/>
+          <circle cx="76" cy="82" r="17" fill="#dca779"/>
+          <circle cx="218" cy="82" r="29" fill="#75401f"/>
+          <circle cx="218" cy="82" r="17" fill="#dca779"/>
+
+          <!-- Head -->
+          <circle cx="147" cy="94" r="73" fill="#75401f"/>
+          <ellipse cx="147" cy="111" rx="53" ry="43" fill="#dca779"/>
+
+          <!-- Eyes -->
+          <g id="eyes">
+            <ellipse cx="122" cy="84" rx="8" ry="11" fill="#171717"/>
+            <ellipse cx="173" cy="84" rx="8" ry="11" fill="#171717"/>
+          </g>
+
+          <g id="closedEyes" style="display:none"
+            fill="none" stroke="#171717"
+            stroke-width="4" stroke-linecap="round">
+            <path d="M111 85 Q122 94 133 85"/>
+            <path d="M162 85 Q173 94 184 85"/>
+          </g>
+
+          
+<!-- Nose -->
+<ellipse cx="147" cy="113" rx="8" ry="6" fill="#63371e"/>
+
+<!-- Normal happy face -->
+<g id="happyFace">
+  <path d="M129 130 Q147 148 165 130"
+    fill="none" stroke="#63371e"
+    stroke-width="4" stroke-linecap="round"/>
+</g>
+
+<!-- Angry face -->
+<g id="angryFace" style="display:none">
+  <path d="M129 145 Q147 125 165 145"
+    fill="none" stroke="#63371e"
+    stroke-width="4" stroke-linecap="round"/>
+
+  <path d="M111 70 L132 80 M163 80 L184 70"
+    fill="none" stroke="#63371e"
+    stroke-width="5" stroke-linecap="round"/>
+</g>
+
+        </svg>
+      </div>
+      <div class="pet-message" id="pet-status">
+        Abir-X is ready for attention!
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-row">
+        <span>Name</span>
+        <strong>Abir-X</strong>
+      </div>
+      <div class="stat-row">
+        <span>Weight</span>
+        <strong><span id="weight">12</span> pounds</strong>
+      </div>
+      <div class="stat-row">
+        <span>Happiness</span>
+        <strong><span id="happiness">50</span> tail wags/min</strong>
+      </div>
+      <div class="stat-row">
+        <span>Mood</span>
+        <strong id="mood">Feeling curious</strong>
+      </div>
+    </div>
+
+    <div id="action-message">
+      Abir-X says: Let's have some fun!
+    </div>
+
+    <div class="buttons">
+      <button id="treat">Give Treat</button>
+      <button id="play">Play</button>
+      <button id="exercise">Exercise</button>
+      <button id="sleep">Sleep</button>
+    </div>
+  </section>
+</main>
+
+<script>
+$(document).ready(function() {
+  const pet_info = {
+    name: "Abir-X",
+    weight: 12,
+    happiness: 50
+  };
+
+  let animationTimer;
+
+  function updatePet() {
+    $("#weight").text(pet_info.weight);
+    $("#happiness").text(pet_info.happiness);
+
+    let bellyWidth = Math.max(25,
+      Math.min(70, 45 + (pet_info.weight - 12) * 2));
+    let bellyHeight = Math.max(30,
+      Math.min(76, 51 + (pet_info.weight - 12) * 2));
+
+    $("#belly").attr({ rx: bellyWidth, ry: bellyHeight });
+
+    let mood = pet_info.happiness >= 80
+      ? "Overjoyed"
+      : pet_info.happiness >= 50
+      ? "Happy"
+      : pet_info.happiness >= 20
+      ? "Feeling tired"
+      : "Needs attention";
+
+    $("#mood").text(mood);
+  }
+
+
+function resetAnimation() {
+  clearTimeout(animationTimer);
+
+  // Method 1: .hasClass()
+  if ($("#monkey").hasClass("sleeping")) {
+    $("#pet-status").text("Abir-X is waking up!");
+  }
+
+  $("#monkey").removeClass("jump wag sleeping");
+  $("#eyes").show();
+  $("#closedEyes").hide();
+
+  // Method 2: .add()
+  $("#monkey").add("#pet-status").css("opacity", 1);
+}
+
+
+  $("#treat").click(function() {
+    resetAnimation();
+    pet_info.weight += 5;
+    pet_info.happiness += 5;
+    $("#pet-status").text("Abir-X loved that treat!");
+    $("#action-message").text(
+      "Abir-X says: Yum! My belly is getting bigger!"
+    );
+    updatePet();
+  });
+
+  $("#exercise").click(function() {
+    resetAnimation();
+    pet_info.weight = Math.max(0, pet_info.weight - 3);
+    pet_info.happiness = Math.max(0, pet_info.happiness - 5);
+    $("#monkey").addClass("jump");
+    $("#pet-status").text("Abir-X is getting fit!");
+    $("#action-message").text(
+      "Abir-X says: Great workout! I'm getting skinnier!"
+    );
+    updatePet();
+
+if (pet_info.weight <= 6) {
+  $("#happyFace").hide();
+  $("#angryFace").show();
+
+  $("#pet-status").text("Abir-X is exhausted and angry!");
+  $("#action-message").text(
+    "Abir-X says: Stop! I've exercised too much!"
+  );
+} else {
+  $("#happyFace").show();
+  $("#angryFace").hide();
+}
+
+    animationTimer = setTimeout(resetAnimation, 1600);
+  });
+
+  $("#play").click(function() {
+    resetAnimation();
+    pet_info.weight = Math.max(0, pet_info.weight - 1);
+    pet_info.happiness += 10;
+    $("#monkey").addClass("jump wag");
+    $("#pet-status").text("Abir-X is having fun!");
+    $("#action-message").text(
+      "Abir-X says: Woohoo! I love playing!"
+    );
+    updatePet();
+    animationTimer = setTimeout(resetAnimation, 2000);
+  });
+
+  $("#sleep").click(function() {
+    resetAnimation();
+    pet_info.happiness += 5;
+    $("#monkey").addClass("sleeping");
+    $("#eyes").hide();
+    $("#closedEyes").show();
+    $("#pet-status").text("Abir-X is sleeping...");
+    $("#action-message").text(
+      "Abir-X says: Zzz... Good night!"
+    );
+    updatePet();
+    $("#angryFace").hide();
+$("#happyFace").show();
+  });
+
+  updatePet();
+});
+</script>
+</body>
 </html>
